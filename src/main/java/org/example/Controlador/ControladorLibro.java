@@ -9,10 +9,10 @@ import java.util.List;
 
 public class ControladorLibro {
 
-    private DAOGenerico2<Libro> daoLibro;
+    private DAOGenerico2<Libro, String> daoLibro;
 
     public ControladorLibro() {
-        this.daoLibro = new DAOGenerico2<>(Libro.class);
+        this.daoLibro = new DAOGenerico2<>(Libro.class, String.class);
     }
 
     public Libro postLibro(HttpServletRequest request) {
