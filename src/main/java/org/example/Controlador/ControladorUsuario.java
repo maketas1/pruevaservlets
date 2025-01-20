@@ -10,10 +10,10 @@ import java.util.List;
 
 public class ControladorUsuario {
 
-    private DAOGenerico2<Usuario, String> daoUsuario;
+    private DAOGenerico2<Usuario> daoUsuario;
 
     public ControladorUsuario() {
-        this.daoUsuario = new DAOGenerico2<>(Usuario.class, String.class);
+        this.daoUsuario = new DAOGenerico2<>(Usuario.class);
     }
 
     public Usuario postUsuario(HttpServletRequest request) {

@@ -110,14 +110,7 @@ public class Usuario {
     }
 
     public int getPrestamosActivos(){
-        int contador=0;
-        LocalDate fecha_actual = LocalDate.now();
-        for(int i=0;i<this.prestamos.size();i++){
-            if(prestamos.get(i).getFechaDevolucion().isAfter(fecha_actual)){
-                contador++;
-            }
-        }
-        return contador;
+        return this.prestamos.size();
     }
 
     public void setPenalizacionHasta(LocalDate penalizacionHasta) {
