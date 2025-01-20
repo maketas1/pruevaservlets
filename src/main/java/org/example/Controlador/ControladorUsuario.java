@@ -2,7 +2,7 @@ package org.example.Controlador;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.Modelo.DAOGenerico2;
+import org.example.Modelo.DAOGenerico;
 import org.example.Modelo.Usuario;
 
 import java.time.LocalDate;
@@ -10,10 +10,10 @@ import java.util.List;
 
 public class ControladorUsuario {
 
-    private DAOGenerico2<Usuario, String> daoUsuario;
+    private DAOGenerico<Usuario> daoUsuario;
 
     public ControladorUsuario() {
-        this.daoUsuario = new DAOGenerico2<>(Usuario.class, String.class);
+        this.daoUsuario = new DAOGenerico<>(Usuario.class);
     }
 
     public Usuario postUsuario(HttpServletRequest request) {
@@ -35,6 +35,7 @@ public class ControladorUsuario {
         usuario.setEmail(request.getParameter("email"));
         usuario.setPassword(request.getParameter("password"));
         usuario.setTipo(request.getParameter("tipo"));
+        usuario.setPenalizacionHasta(LocalDate.now());
         daoUsuario.add(usuario);
         return usuario;
     }
@@ -51,18 +52,20 @@ public class ControladorUsuario {
     }
 
     public Usuario buscarUsuario(HttpServletRequest request) {
-        String dni = request.getParameter("dni");
+        int dni = Integer.parseInt(request.getParameter("idUsuario"));
         Usuario usuario = daoUsuario.getById(dni);
         return usuario;
     }
 
     public Usuario update(HttpServletRequest request) {
         Usuario usuario = new Usuario();
+        usuario.setId(Integer.parseInt(request.getParameter("idUsuario")));
         usuario.setDni(request.getParameter("dni"));
         usuario.setNombre(request.getParameter("nombre"));
         usuario.setEmail(request.getParameter("email"));
         usuario.setPassword(request.getParameter("password"));
         usuario.setTipo(request.getParameter("tipo"));
+        usuario.setPenalizacionHasta(LocalDate.now());
         return daoUsuario.update(usuario);
     }
 

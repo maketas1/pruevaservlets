@@ -48,11 +48,11 @@ public class ControladorPrestamo {
     }
 
     public Prestamo update(HttpServletRequest request) {
-        Prestamo prestamo = new Prestamo();
-        prestamo.setId(Integer.parseInt(request.getParameter("idPrestamo")));
+        Prestamo prestamo = getById(request);
         prestamo.setEjemplar(controladorEjemplar.getById(request));
         prestamo.setUsuario(controladorUsuario.buscarUsuario(request));
-        return daoPrestamo.update(prestamo);
+        daoPrestamo.update(prestamo);
+        return prestamo;
     }
 
     public Prestamo delete(HttpServletRequest request) {
@@ -90,12 +90,9 @@ public class ControladorPrestamo {
     }
 
     public Prestamo registrarDevolucion(HttpServletRequest request) {
-        Ejemplar ejemplar = controladorEjemplar.getById(request);
-        Usuario usuario = controladorUsuario.buscarUsuario(request);
-        Prestamo prestamo = new Prestamo();
-        prestamo.setEjemplar(ejemplar);
-        prestamo.setUsuario(usuario);
-        prestamo.setId(Integer.valueOf(request.getParameter("idPrestamo")));
+        Prestamo prestamo = getById(request);
+        Ejemplar ejemplar = prestamo.getEjemplar();
+        Usuario usuario = prestamo.getUsuario();
 
         prestamo.setFechaDevolucion(LocalDate.now());
         daoPrestamo.update(prestamo);

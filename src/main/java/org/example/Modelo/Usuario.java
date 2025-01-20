@@ -110,7 +110,11 @@ public class Usuario {
     }
 
     public int getPrestamosActivos(){
-        return this.prestamos.size();
+        if (prestamos != null){
+            return prestamos.size();
+        } else {
+            return 0;
+        }
     }
 
     public void setPenalizacionHasta(LocalDate penalizacionHasta) {
