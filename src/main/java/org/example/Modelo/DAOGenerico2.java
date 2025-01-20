@@ -7,14 +7,16 @@ import jakarta.persistence.Persistence;
 
 import java.util.List;
 
-public class DAOGenerico<T> {
+public class DAOGenerico2<T, ID> {
     EntityManagerFactory emf = Persistence.createEntityManagerFactory("unidad-biblioteca");
     EntityManager em = emf.createEntityManager();
     EntityTransaction tx = em.getTransaction();
     Class<T> clase;
+    Class<ID> claseID;
 
-    public DAOGenerico(Class<T> clase){
+    public DAOGenerico2(Class<T> clase, Class<ID> claseID){
         this.clase=clase;
+        this.claseID=claseID;
     }
 
     //INSERT
@@ -26,13 +28,13 @@ public class DAOGenerico<T> {
     }
 
     //SELECT WHERE ID
-    public T getById(Integer id){
+    public T getById(ID id){
         return em.find(clase, id);
     }
 
     //SELECT *
     public List<T> getAll(){
-        return em.createQuery("SELECT c from "+ clase.getSimpleName()+" c").getResultList();
+        return em.createQuery("SELECT c from "+ clase.getName()+" c").getResultList();
     }
 
     //UPDATE
@@ -53,9 +55,9 @@ public class DAOGenerico<T> {
     @Override
     public String toString() {
         return "DAOGenerico{" +
-                "clase simple name=" + clase.getSimpleName() + "\n"+
-                "clase canonical name=" + clase.getCanonicalName() + "\n"+
-                "clase name=" + clase.getName() + "\n"+
+                "clase=" + clase.getSimpleName() +
+                "clase=" + clase.getName() +
+                ", claseID=" + claseID +
                 '}';
     }
 }

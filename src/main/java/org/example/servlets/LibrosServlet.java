@@ -1,4 +1,4 @@
-package org.example.Controlador;
+package org.example.servlets;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.Modelo.DAOGenerico;
+import org.example.Controlador.ControladorLibro;
 import org.example.Modelo.Libro;
 
 import java.io.IOException;
@@ -17,10 +17,10 @@ import java.util.List;
 @WebServlet(name = "librosServlet", value = "/libros-servlet")
 public class LibrosServlet extends HttpServlet {
 
-        DAOGenerico<Libro, String> daolibro;
+    ControladorLibro controladorLibro;
 
     public void init(){
-            daolibro = new DAOGenerico<>(Libro.class,String.class);
+        controladorLibro = new ControladorLibro();
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -29,25 +29,9 @@ public class LibrosServlet extends HttpServlet {
         ObjectMapper conversorJson = new ObjectMapper();
         conversorJson.registerModule(new JavaTimeModule());
 
-        if (request.getParameter("operacion").equals("create")) {
-            String id = request.getParameter("id");
-            String titulo = request.getParameter("titulo");
-            String autor = request.getParameter("autor");
-
-            Libro libro = new Libro(id, titulo, autor);
-            daolibro.add(libro);
-            String json = conversorJson.writeValueAsString(libro);
-            impresora.println(json);
-        } else if (request.getParameter("operacion").equals("update")) {
-            String id = request.getParameter("id");
-            String titulo = request.getParameter("titulo");
-            String autor = request.getParameter("autor");
-
-            Libro libro = new Libro(id, titulo, autor);
-            daolibro.update(libro);
-            String json = conversorJson.writeValueAsString(libro);
-            impresora.println(json);
-        }
+        Libro libro = controladorLibro.postLibro(request);
+        String json = conversorJson.writeValueAsString(libro);
+        impresora.println(json);
     }
 
     public void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -56,10 +40,7 @@ public class LibrosServlet extends HttpServlet {
         ObjectMapper conversorJson = new ObjectMapper();
         conversorJson.registerModule(new JavaTimeModule());
 
-        String id = request.getParameter("id");
-
-        Libro libro = daolibro.getById(id);
-        daolibro.delete(libro);
+        Libro libro = controladorLibro.delete(request);
         String json = conversorJson.writeValueAsString(libro);
         impresora.println(json);
     }
@@ -72,7 +53,7 @@ public class LibrosServlet extends HttpServlet {
             ObjectMapper conversorJson = new ObjectMapper();
             conversorJson.registerModule(new JavaTimeModule());
 
-            Libro libro = daolibro.getById(request.getParameter("id"));
+            Libro libro = controladorLibro.getById(request);
             System.out.println("En java " + libro.toString());
 
             String json = conversorJson.writeValueAsString(libro);
@@ -83,7 +64,7 @@ public class LibrosServlet extends HttpServlet {
             ObjectMapper conversorJson = new ObjectMapper();
             conversorJson.registerModule(new JavaTimeModule());
 
-            List<Libro> listaLibros = daolibro.getAll();
+            List<Libro> listaLibros = controladorLibro.getAll();
             System.out.println("En java" + listaLibros);
 
             String json_response = conversorJson.writeValueAsString(listaLibros);
